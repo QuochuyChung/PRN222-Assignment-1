@@ -8,7 +8,7 @@ using asg1.DAL.Data;
 
 #nullable disable
 
-namespace asg1.Migrations
+namespace asg1.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260928052053_InitialCreate")]
@@ -24,7 +24,7 @@ namespace asg1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("asg1.Models.Entities.Subject", b =>
+            modelBuilder.Entity("asg1.DAL.Entities.Subject", b =>
                 {
                     b.Property<int>("SubjectId")
                         .ValueGeneratedOnAdd()

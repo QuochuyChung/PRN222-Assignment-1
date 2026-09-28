@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace asg1.Migrations
+namespace asg1.DAL.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

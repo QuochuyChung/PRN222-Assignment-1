@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace asg1.Migrations
+namespace asg1.DAL.Migrations
 {
     /// <inheritdoc />
     public partial class AddQuestionAndRubric : Migration

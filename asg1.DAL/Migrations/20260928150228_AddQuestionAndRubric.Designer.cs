@@ -9,7 +9,7 @@ using asg1.DAL.Data;
 
 #nullable disable
 
-namespace asg1.Migrations
+namespace asg1.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260928150228_AddQuestionAndRubric")]
@@ -25,7 +25,7 @@ namespace asg1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("asg1.Models.Entities.Question", b =>
+            modelBuilder.Entity("asg1.DAL.Entities.Question", b =>
                 {
                     b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd()
@@ -59,7 +59,7 @@ namespace asg1.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("asg1.Models.Entities.RubricCriterion", b =>
+            modelBuilder.Entity("asg1.DAL.Entities.RubricCriterion", b =>
                 {
                     b.Property<int>("RubricCriterionId")
                         .ValueGeneratedOnAdd()
@@ -90,7 +90,7 @@ namespace asg1.Migrations
                     b.ToTable("RubricCriteria");
                 });
 
-            modelBuilder.Entity("asg1.Models.Entities.Subject", b =>
+            modelBuilder.Entity("asg1.DAL.Entities.Subject", b =>
                 {
                     b.Property<int>("SubjectId")
                         .ValueGeneratedOnAdd()
@@ -116,9 +116,9 @@ namespace asg1.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("asg1.Models.Entities.Question", b =>
+            modelBuilder.Entity("asg1.DAL.Entities.Question", b =>
                 {
-                    b.HasOne("asg1.Models.Entities.Subject", "Subject")
+                    b.HasOne("asg1.DAL.Entities.Subject", "Subject")
                         .WithMany("Questions")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -127,9 +127,9 @@ namespace asg1.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("asg1.Models.Entities.RubricCriterion", b =>
+            modelBuilder.Entity("asg1.DAL.Entities.RubricCriterion", b =>
                 {
-                    b.HasOne("asg1.Models.Entities.Question", "Question")
+                    b.HasOne("asg1.DAL.Entities.Question", "Question")
                         .WithMany("RubricCriteria")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -138,12 +138,12 @@ namespace asg1.Migrations
                     b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("asg1.Models.Entities.Question", b =>
+            modelBuilder.Entity("asg1.DAL.Entities.Question", b =>
                 {
                     b.Navigation("RubricCriteria");
                 });
 
-            modelBuilder.Entity("asg1.Models.Entities.Subject", b =>
+            modelBuilder.Entity("asg1.DAL.Entities.Subject", b =>
                 {
                     b.Navigation("Questions");
                 });
