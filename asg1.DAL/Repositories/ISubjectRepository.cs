@@ -1,6 +1,6 @@
-using asg1.Models.Entities;
+using asg1.DAL.Entities;
 
-namespace asg1.Models.Repositories
+namespace asg1.DAL.Repositories
 {
     public interface ISubjectRepository : IGenericRepository<Subject>
     {

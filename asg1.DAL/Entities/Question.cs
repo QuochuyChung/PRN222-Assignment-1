@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using asg1.Models.Enums;
+using asg1.DAL.Enums;
 
-namespace asg1.Models.Entities
+namespace asg1.DAL.Entities
 {
     public class Question
     {

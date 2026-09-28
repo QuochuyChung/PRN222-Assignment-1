@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace asg1.Models.Entities
+namespace asg1.DAL.Entities
 {
     public class RubricCriterion
     {

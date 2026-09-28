@@ -1,8 +1,8 @@
-using asg1.Models.Data;
-using asg1.Models.Entities;
+using asg1.DAL.Data;
+using asg1.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace asg1.Models.Repositories
+namespace asg1.DAL.Repositories
 {
     public class SubjectRepository : GenericRepository<Subject>, ISubjectRepository
     {

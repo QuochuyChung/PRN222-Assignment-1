@@ -1,7 +1,7 @@
-using asg1.Models.Entities;
+using asg1.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace asg1.Models.Data
+namespace asg1.DAL.Data
 {
     public class AppDbContext : DbContext
     {

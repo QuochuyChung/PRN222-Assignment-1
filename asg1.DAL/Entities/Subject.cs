@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace asg1.Models.Entities
+namespace asg1.DAL.Entities
 {
     public class Subject
     {

@@ -1,5 +1,5 @@
-using asg1.Models.Data;
-using asg1.Models.Repositories;
+using asg1.DAL.Data;
+using asg1.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
