@@ -1,0 +1,16 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: asg1-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Asg1@2026Dev"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - asg1_sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+
+volumes:
+  asg1_sqlserver_data:

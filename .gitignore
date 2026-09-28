@@ -1,0 +1,26 @@
+# Build results
+bin/
+obj/
+out/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# appsettings chứa thông tin nhạy cảm (connection string, password thật)
+# -> chỉ commit appsettings.example.json, mỗi người tự copy thành appsettings.json và điền giá trị thật của mình
+asg1/appsettings.json
+asg1/appsettings.*.json
+!asg1/appsettings.example.json
+
+db/
+
+# EF Core
+**/Migrations/*.Designer.cs.bak
+
+# macOS / Windows junk
+.DS_Store
+Thumbs.db
