@@ -82,21 +82,21 @@ asg1.slnx
 - [x] 1 project ASP.NET Core MVC duy nhất: `asg1` (net8.0). Đã xóa cấu trúc DAL/BLL tách project trước đó — gộp hết vào `Models/`.
 - [x] Cài `Microsoft.EntityFrameworkCore.SqlServer` + `.Design` vào `asg1`.
 - [x] Enums mẫu: `BloomLevel`, `QuestionStatus`, `QuestionSource` (`Models/Enums`).
-- [x] Entity mẫu: `Subject` (`Models/Entities/Subject.cs`).
-- [x] `AppDbContext` (`Models/Data/AppDbContext.cs`) với `DbSet<Subject>`.
+- [x] Entity: `Subject`, `Question` (FK `SubjectId`), `RubricCriterion` (FK `QuestionId`) — đủ 3 entity cốt lõi của Nhóm 1 (`Models/Entities/`).
+- [x] `AppDbContext` (`Models/Data/AppDbContext.cs`) với `DbSet<Subject>`, `DbSet<Question>`, `DbSet<RubricCriterion>` + khai báo quan hệ FK (`Subject 1-N Question`, `Question 1-N RubricCriterion`).
 - [x] Generic Repository pattern trong `Models/Repositories`: `IGenericRepository<T>` / `GenericRepository<T>` + ví dụ cụ thể hóa `ISubjectRepository` / `SubjectRepository`.
 - [x] Đăng ký `AppDbContext` + `ISubjectRepository` vào DI container trong `Program.cs`.
 - [x] Kết nối database thật của nhóm (`sqlserver.huydevops.id.vn`, database `Asignment1`, user `asg_1` chỉ có quyền trên đúng DB này).
-- [x] Migration `InitialCreate` đã tạo và **chạy thật thành công** lên database — bảng `Subjects` đã tồn tại trên DB thật.
+- [x] Migration `InitialCreate` + `AddQuestionAndRubric` đã tạo và **chạy thật thành công** lên database — bảng `Subjects`, `Questions`, `RubricCriteria` đã tồn tại trên DB thật, đúng FK/index.
 - [x] SQL Server local dự phòng qua Docker (`docker-compose.yml`) cho ai cần test riêng không phụ thuộc DB chung.
 - [x] `appsettings.example.json` làm mẫu; `.gitignore` loại `appsettings.json` thật và cả thư mục `db/` (chứa script có password thật) ra khỏi git.
 - [x] Script tạo user DB riêng, chỉ có quyền trên đúng 1 database (`db/create-app-user.sql`, không lên git).
 - [x] Build solution thành công (`dotnet build` — 0 lỗi).
 
 Chưa làm (còn lại để hoàn thành asg1):
-- [ ] Chưa có Controller/View nào ngoài `HomeController` mặc định — chưa có ví dụ CRUD hoàn chỉnh theo pattern Model-View-Controller.
-- [ ] Entities còn thiếu cho Nhóm 1: `Question`, `RubricCriterion` (và có thể `Lecturer` để làm CreatedBy).
-- [ ] Sau khi thêm entity mới, cần tạo thêm migration và chạy `dotnet ef database update` (xem hướng dẫn ở mục 7).
+- [ ] Chưa có Controller/View nào ngoài `HomeController` mặc định — chưa có ví dụ CRUD hoàn chỉnh theo pattern Model-View-Controller. Đây là phần P2/P3/P4/P5 bắt đầu làm được ngay từ bây giờ vì entity đã đủ.
+- [ ] Chưa có `IQuestionRepository`/`IRubricCriterionRepository` cụ thể hóa (mới có generic `IGenericRepository<T>`) — mỗi người khi cần query riêng (VD lọc câu hỏi theo `Status`) thì tự thêm interface + implementation theo đúng pattern của `ISubjectRepository`.
+- [ ] Có thể cần thêm entity `Lecturer`/`Account` (Nhóm 7) nếu muốn có `CreatedBy` thật cho `Question` — hiện chưa có, để dành cho asg2/group project.
 
 ## 6. Đề xuất chia task cho nhóm
 
