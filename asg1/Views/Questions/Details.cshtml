@@ -1,0 +1,59 @@
+@model QuestionDetailsViewModel
+@{
+    ViewData["Title"] = "Chi tiết câu hỏi";
+}
+
+<h1>Chi tiết câu hỏi #@Model.QuestionId</h1>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">Nội dung</dt>
+    <dd class="col-sm-9">@Model.Content</dd>
+
+    <dt class="col-sm-3">Môn học</dt>
+    <dd class="col-sm-9">@Model.SubjectCode - @Model.SubjectName</dd>
+
+    <dt class="col-sm-3">Mức độ Bloom</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(m => m.BloomLevel)</dd>
+
+    <dt class="col-sm-3">Trạng thái</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(m => m.Status)</dd>
+
+    <dt class="col-sm-3">Nguồn</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(m => m.Source)</dd>
+
+    <dt class="col-sm-3">Ngày tạo</dt>
+    <dd class="col-sm-9">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</dd>
+</dl>
+
+<h4>Rubric chấm điểm (@Model.RubricCriteria.Count)</h4>
+@if (!Model.RubricCriteria.Any())
+{
+    <div class="alert alert-info">Câu hỏi chưa có tiêu chí chấm điểm.</div>
+}
+else
+{
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>Tiêu chí</th>
+                <th style="width: 140px;">Điểm tối đa</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var criterion in Model.RubricCriteria)
+            {
+                <tr>
+                    <td>@criterion.CriterionName</td>
+                    <td>@criterion.MaxScore</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.QuestionId" class="btn btn-primary">Sửa</a>
+    <a asp-action="Delete" asp-route-id="@Model.QuestionId" class="btn btn-outline-danger">Xóa</a>
+    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+</p>

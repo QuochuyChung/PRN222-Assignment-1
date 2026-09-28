@@ -1,0 +1,77 @@
+@model QuestionIndexViewModel
+@{
+    ViewData["Title"] = "Ngân hàng câu hỏi";
+}
+
+<h1>Ngân hàng câu hỏi</h1>
+
+@if (TempData["Success"] is string successMessage)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @successMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<form asp-action="Index" method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <label asp-for="Keyword" class="visually-hidden">Từ khóa</label>
+        <input asp-for="Keyword" class="form-control" placeholder="Tìm theo nội dung..." />
+    </div>
+    <div class="col-md-3">
+        <label asp-for="SubjectId" class="visually-hidden">Môn học</label>
+        <select asp-for="SubjectId" asp-items="Model.SubjectOptions" class="form-select"></select>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="Status" class="visually-hidden">Trạng thái</label>
+        <select asp-for="Status" asp-items="Model.StatusOptions" class="form-select"></select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Lọc</button>
+    </div>
+</form>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">+ Tạo câu hỏi mới</a>
+</p>
+
+@if (!Model.Items.Any())
+{
+    <div class="alert alert-info">Không tìm thấy câu hỏi nào.</div>
+}
+else
+{
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th style="width: 60px;">#</th>
+                <th>Nội dung</th>
+                <th style="width: 180px;">Môn học</th>
+                <th style="width: 140px;">Mức độ Bloom</th>
+                <th style="width: 110px;">Trạng thái</th>
+                <th style="width: 120px;">Ngày tạo</th>
+                <th style="width: 90px;">Rubric</th>
+                <th style="width: 210px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.QuestionId</td>
+                    <td>@item.Content</td>
+                    <td>@item.SubjectCode - @item.SubjectName</td>
+                    <td>@Html.DisplayFor(m => item.BloomLevel)</td>
+                    <td>@Html.DisplayFor(m => item.Status)</td>
+                    <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
+                    <td>@item.RubricCount</td>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@item.QuestionId" class="btn btn-sm btn-outline-secondary">Chi tiết</a>
+                        <a asp-action="Edit" asp-route-id="@item.QuestionId" class="btn btn-sm btn-outline-primary">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@item.QuestionId" class="btn btn-sm btn-outline-danger">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,33 @@
+@model QuestionDetailsViewModel
+@{
+    ViewData["Title"] = "Xóa câu hỏi";
+}
+
+<h1>Xác nhận xóa</h1>
+<hr />
+
+<div class="alert alert-warning">
+    Bạn có chắc chắn muốn xóa câu hỏi này? Hành động này không thể hoàn tác.
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Mã</dt>
+    <dd class="col-sm-9">@Model.QuestionId</dd>
+
+    <dt class="col-sm-3">Nội dung</dt>
+    <dd class="col-sm-9">@Model.Content</dd>
+
+    <dt class="col-sm-3">Môn học</dt>
+    <dd class="col-sm-9">@Model.SubjectCode - @Model.SubjectName</dd>
+
+    <dt class="col-sm-3">Mức độ Bloom</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(m => m.BloomLevel)</dd>
+
+    <dt class="col-sm-3">Trạng thái</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(m => m.Status)</dd>
+</dl>
+
+<form asp-action="Delete" asp-route-id="@Model.QuestionId" method="post">
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+</form>

@@ -1,0 +1,41 @@
+@model QuestionFormViewModel
+@{
+    ViewData["Title"] = "Tạo câu hỏi";
+}
+
+<h1>Tạo câu hỏi mới</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Content" class="form-label"></label>
+                <textarea asp-for="Content" class="form-control" rows="5"
+                          placeholder="Nhập nội dung câu hỏi..."></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="SubjectId" class="form-label"></label>
+                <select asp-for="SubjectId" asp-items="Model.SubjectOptions" class="form-select"></select>
+                <span asp-validation-for="SubjectId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="BloomLevel" class="form-label"></label>
+                <select asp-for="BloomLevel" asp-items="Html.GetEnumSelectList<BloomLevel>()" class="form-select"></select>
+                <span asp-validation-for="BloomLevel" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Tạo mới</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
