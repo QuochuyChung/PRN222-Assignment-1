@@ -4,6 +4,15 @@
 }
 
 <h1>Tạo câu hỏi mới</h1>
+
+@if (TempData["Success"] is string successMessage)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @successMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <hr />
 
 <div class="row">
@@ -30,7 +39,8 @@
                 <span asp-validation-for="BloomLevel" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary">Tạo mới</button>
+            <button type="submit" name="nextAction" value="stay" class="btn btn-primary">Lưu &amp; tạo thêm</button>
+            <button type="submit" name="nextAction" value="list" class="btn btn-success">Lưu &amp; về danh sách</button>
             <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
         </form>
     </div>

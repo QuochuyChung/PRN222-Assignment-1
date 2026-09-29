@@ -74,7 +74,7 @@ namespace asg1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(QuestionFormViewModel vm)
+        public async Task<IActionResult> Create(QuestionFormViewModel vm, string? nextAction)
         {
             if (!ModelState.IsValid)
             {
@@ -86,7 +86,9 @@ namespace asg1.Controllers
             if (result.IsSuccess)
             {
                 TempData["Success"] = "Đã tạo câu hỏi thành công.";
-                return RedirectToAction(nameof(Index));
+                return nextAction == "stay"
+                    ? RedirectToAction(nameof(Create))
+                    : RedirectToAction(nameof(Index));
             }
 
             ApplyErrors(result);
