@@ -8,6 +8,8 @@ namespace asg1.Models
         public string? Keyword { get; set; }
         public int? SubjectId { get; set; }
         public QuestionStatus? Status { get; set; }
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; }
 
         public IReadOnlyList<QuestionListItem> Items { get; set; } = Array.Empty<QuestionListItem>();
         public SelectList SubjectOptions { get; set; } = new SelectList(Enumerable.Empty<object>());
