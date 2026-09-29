@@ -1,0 +1,41 @@
+@model asg1.Models.Entities.Question
+@using asg1.Models.Enums
+
+@{
+    ViewData["Title"] = "Edit Question";
+}
+
+<h1>Edit Question</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="QuestionId" />
+            <input type="hidden" asp-for="Status" />
+            <input type="hidden" asp-for="Source" />
+            <input type="hidden" asp-for="CreatedAt" />
+            
+            <div class="form-group mt-2">
+                <label asp-for="SubjectId" class="control-label">Subject</label>
+                <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
+            </div>
+            <div class="form-group mt-2">
+                <label asp-for="Content" class="control-label">Question Content</label>
+                <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <label asp-for="BloomLevel" class="control-label">Bloom Level</label>
+                <select asp-for="BloomLevel" class="form-control" asp-items="Html.GetEnumSelectList<BloomLevel>()"></select>
+                <span asp-validation-for="BloomLevel" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mt-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>

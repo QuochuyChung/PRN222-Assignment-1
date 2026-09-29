@@ -1,0 +1,42 @@
+@model IEnumerable<asg1.Models.Entities.Question>
+
+@{
+    ViewData["Title"] = "Questions";
+}
+
+<h1>Questions</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Content</th>
+            <th>Subject</th>
+            <th>Bloom Level</th>
+            <th>Status</th>
+            <th>Source</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Content</td>
+                <td>@item.Subject?.Name</td>
+                <td>@item.BloomLevel</td>
+                <td>@item.Status</td>
+                <td>@item.Source</td>
+                <td>@item.CreatedAt.ToShortDateString()</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.QuestionId">Edit</a> |
+                    <a asp-action="Review" asp-route-id="@item.QuestionId">Review</a> |
+                    <a asp-action="Delete" asp-route-id="@item.QuestionId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

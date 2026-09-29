@@ -7,7 +7,7 @@ services:
       MSSQL_SA_PASSWORD: "Asg1@2026Dev"
       MSSQL_PID: "Developer"
     ports:
-      - "1433:1433"
+      - "14330:1433"
     volumes:
       - asg1_sqlserver_data:/var/opt/mssql
     restart: unless-stopped
