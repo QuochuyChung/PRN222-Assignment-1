@@ -157,6 +157,22 @@ dotnet run --project asg1
 ```
 Mặc định chạy ở `http://localhost:5163` (xem `asg1/Properties/launchSettings.json` nếu muốn đổi port).
 
+### Cấu hình P5 — AI sinh câu hỏi
+
+Trong `asg1/appsettings.json`, điền API key lấy từ Google AI Studio vào phần `Gemini` (file này đã bị `.gitignore`):
+
+```json
+"Gemini": {
+  "ApiKey": "YOUR_GEMINI_API_KEY",
+  "Model": "gemini-3.1-flash-lite",
+  "BaseUrl": "https://generativelanguage.googleapis.com/v1beta"
+}
+```
+
+Có thể dùng biến môi trường `Gemini__ApiKey` thay cho việc lưu key trong file. Sau khi chạy ứng dụng, mở `/AiQuestions` để tải PDF, Word, PowerPoint, TXT hoặc Markdown và sinh câu hỏi.
+
+P5 tạo, hiển thị và lưu câu hỏi vào entity `Question` với `Source = AIGenerated`, `Status = Draft`. Giảng viên cần chọn môn học trước khi upload để mỗi câu hỏi được gắn đúng `SubjectId`.
+
 ### Khi thêm entity mới (Question, RubricCriterion, ...)
 Sau khi thêm entity + khai báo `DbSet` mới trong `AppDbContext`, tạo migration mới rồi update lại DB:
 ```bash

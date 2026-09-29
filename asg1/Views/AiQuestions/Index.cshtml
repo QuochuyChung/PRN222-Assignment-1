@@ -1,0 +1,108 @@
+@model asg1.Models.ViewModels.AiQuestionGenerationViewModel
+
+@{
+    ViewData["Title"] = "AI sinh câu hỏi";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="mb-4">
+            <h1 class="h3">AI sinh câu hỏi</h1>
+            <p class="text-muted mb-0">Tải giáo trình hoặc slide lên để tạo câu hỏi vấn đáp từ nội dung tài liệu.</p>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <form asp-action="Index" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    @if (Model.Subjects.Count == 0)
+                    {
+                        <div class="alert alert-warning" role="alert">
+                            Chưa có môn học trong database. Cần tạo môn học trước khi sinh câu hỏi.
+                        </div>
+                    }
+
+                    <div class="mb-3">
+                        <label asp-for="SubjectId" class="form-label fw-semibold"></label>
+                        <select asp-for="SubjectId" asp-items="Model.Subjects" class="form-select">
+                            <option value="0">-- Chọn môn học --</option>
+                        </select>
+                        <span asp-validation-for="SubjectId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Document" class="form-label fw-semibold"></label>
+                        <input asp-for="Document"
+                               class="form-control"
+                               accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.md" />
+                        <div class="form-text">Hỗ trợ PDF, Word, PowerPoint, TXT, Markdown; tối đa 20 MB.</div>
+                        <span asp-validation-for="Document" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3" style="max-width: 180px;">
+                        <label asp-for="QuestionCount" class="form-label fw-semibold"></label>
+                        <input asp-for="QuestionCount" class="form-control" min="1" max="20" />
+                        <span asp-validation-for="QuestionCount" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-primary"
+                            id="generateButton"
+                            disabled="@(Model.Subjects.Count == 0)">
+                        <span class="spinner-border spinner-border-sm d-none" id="generateSpinner" aria-hidden="true"></span>
+                        <span id="generateButtonText">Tải lên và sinh câu hỏi</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        @if (Model.Questions.Count > 0)
+        {
+            <div class="alert alert-success" role="alert">
+                Đã lưu @Model.SavedQuestionCount câu hỏi AI vào ngân hàng với trạng thái Draft.
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h4 mb-0">Câu hỏi đã sinh</h2>
+                <span class="text-muted">@Model.UploadedFileName</span>
+            </div>
+
+            @for (var index = 0; index < Model.Questions.Count; index++)
+            {
+                var question = Model.Questions[index];
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between gap-3 mb-2">
+                            <h3 class="h5 mb-0">Câu @(index + 1)</h3>
+                            <div class="text-nowrap">
+                                <span class="badge text-bg-primary">@question.BloomLevel</span>
+                                <span class="badge text-bg-secondary">Draft</span>
+                            </div>
+                        </div>
+                        <p class="mb-3">@question.Content</p>
+                        <div class="rounded bg-light p-3">
+                            <span class="fw-semibold">Đáp án gợi ý:</span>
+                            @question.SuggestedAnswer
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelector("form")?.addEventListener("submit", function () {
+            if (!this.checkValidity()) {
+                return;
+            }
+
+            document.getElementById("generateButton").disabled = true;
+            document.getElementById("generateSpinner").classList.remove("d-none");
+            document.getElementById("generateButtonText").textContent = "AI đang đọc tài liệu...";
+        });
+    </script>
+}
