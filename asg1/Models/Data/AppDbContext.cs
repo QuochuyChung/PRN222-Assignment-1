@@ -35,6 +35,12 @@ namespace asg1.Models.Data
                 .Property(r => r.MaxScore)
                 .HasPrecision(5, 2);
 
+            modelBuilder.Entity<Subject>().HasData(
+                new Subject { SubjectId = 1, Code = "PRN212", Name = "Basic Programming" },
+                new Subject { SubjectId = 2, Code = "PRN222", Name = "Advanced Programming" },
+                new Subject { SubjectId = 3, Code = "PRJ301", Name = "Java Web Application Development" }
+            );
+
             base.OnModelCreating(modelBuilder);
         }
     }

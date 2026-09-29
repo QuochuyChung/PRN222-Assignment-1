@@ -5,33 +5,57 @@
     ViewData["Title"] = "Create Question";
 }
 
-<h1>Create Question</h1>
-
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <div class="form-group mt-2">
-                <label asp-for="SubjectId" class="control-label">Subject</label>
-                <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Create New Question</h4>
             </div>
-            <div class="form-group mt-2">
-                <label asp-for="Content" class="control-label">Question Content</label>
-                <textarea asp-for="Content" class="form-control" rows="4"></textarea>
-                <span asp-validation-for="Content" class="text-danger"></span>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="SubjectId" class="control-label fw-bold">Subject</label>
+                        <select asp-for="SubjectId" class="form-select" asp-items="ViewBag.SubjectId"></select>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="Content" class="control-label fw-bold">Question Content</label>
+                        <textarea asp-for="Content" class="form-control" rows="6" id="tinyMceContent"></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        <label asp-for="BloomLevel" class="control-label fw-bold">Bloom Level</label>
+                        <select asp-for="BloomLevel" class="form-select" asp-items="Html.GetEnumSelectList<BloomLevel>()"></select>
+                        <span asp-validation-for="BloomLevel" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to List
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save Question
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group mt-2">
-                <label asp-for="BloomLevel" class="control-label">Bloom Level (Nhớ/Hiểu/Vận dụng/Phân tích)</label>
-                <select asp-for="BloomLevel" class="form-control" asp-items="Html.GetEnumSelectList<BloomLevel>()"></select>
-                <span asp-validation-for="BloomLevel" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group mt-3">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+      tinymce.init({
+        selector: '#tinyMceContent',
+        plugins: 'lists code table',
+        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent',
+        menubar: false,
+        branding: false
+      });
+    </script>
+}

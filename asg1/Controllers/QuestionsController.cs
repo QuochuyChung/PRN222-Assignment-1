@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using asg1.Models.Entities;
 using asg1.Models.Repositories;
 using asg1.Models.Enums;
+using asg1.Models.Constants;
 
 namespace asg1.Controllers
 {
@@ -10,18 +11,30 @@ namespace asg1.Controllers
     {
         private readonly IQuestionRepository _questionRepository;
         private readonly ISubjectRepository _subjectRepository;
+        private readonly IConfiguration _configuration;
 
-        public QuestionsController(IQuestionRepository questionRepository, ISubjectRepository subjectRepository)
+        public QuestionsController(IQuestionRepository questionRepository, ISubjectRepository subjectRepository, IConfiguration configuration)
         {
             _questionRepository = questionRepository;
             _subjectRepository = subjectRepository;
+            _configuration = configuration;
         }
 
         // GET: Questions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int? subjectId = null, string? searchString = null)
         {
-            var questions = await _questionRepository.GetQuestionsWithSubjectAsync();
-            return View(questions);
+            int pageSize = _configuration.GetValue<int>("PaginationSettings:PageSize", 5);
+            var result = await _questionRepository.GetQuestionsWithSubjectPaginatedAsync(page, pageSize, subjectId, searchString);
+            
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(result.TotalCount / (double)pageSize);
+            ViewBag.CurrentSubjectId = subjectId;
+            ViewBag.CurrentSearchString = searchString;
+            
+            var subjects = await _subjectRepository.GetAllAsync();
+            ViewBag.Subjects = new SelectList(subjects, "SubjectId", "Name", subjectId);
+            
+            return View(result.Items);
         }
 
         // GET: Questions/Create
@@ -100,6 +113,12 @@ namespace asg1.Controllers
         {
             var question = await _questionRepository.GetByIdAsync(id);
             if (question == null) return NotFound();
+
+            if (question.Status != QuestionStatus.Draft)
+            {
+                TempData["ErrorMessage"] = ErrorMessages.ReviewDraftOnly;
+                return RedirectToAction(nameof(Index));
+            }
 
             question.Status = status;
             _questionRepository.Update(question);
