@@ -5,7 +5,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\asg1.BLL\asg1.BLL.csproj" />
+    <ProjectReference Include="..\asg1.DAL\asg1.DAL.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
