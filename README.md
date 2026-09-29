@@ -86,7 +86,7 @@ asg1.slnx
 - [x] `AppDbContext` (`Models/Data/AppDbContext.cs`) với `DbSet<Subject>`, `DbSet<Question>`, `DbSet<RubricCriterion>` + khai báo quan hệ FK (`Subject 1-N Question`, `Question 1-N RubricCriterion`).
 - [x] Generic Repository pattern trong `Models/Repositories`: `IGenericRepository<T>` / `GenericRepository<T>` + ví dụ cụ thể hóa `ISubjectRepository` / `SubjectRepository`.
 - [x] Đăng ký `AppDbContext` + `ISubjectRepository` vào DI container trong `Program.cs`.
-- [x] Kết nối database thật của nhóm (`sqlserver.huydevops.id.vn`, database `Asignment1`, user `asg_1` chỉ có quyền trên đúng DB này).
+- [x] Kết nối database thật của nhóm (`192.168.58.24`, database `Asignment1`, user `asg_1` chỉ có quyền trên đúng DB này).
 - [x] Migration `InitialCreate` + `AddQuestionAndRubric` đã tạo và **chạy thật thành công** lên database — bảng `Subjects`, `Questions`, `RubricCriteria` đã tồn tại trên DB thật, đúng FK/index.
 - [x] SQL Server local dự phòng qua Docker (`docker-compose.yml`) cho ai cần test riêng không phụ thuộc DB chung.
 - [x] `appsettings.example.json` làm mẫu; `.gitignore` loại `appsettings.json` thật và cả thư mục `db/` (chứa script có password thật) ra khỏi git.
@@ -130,7 +130,7 @@ Sau đó mở `asg1/appsettings.json`, điền connection string vào `Connectio
 
 **Cách A — Dùng chung SQL Server của nhóm (khuyến khích, khỏi cài gì thêm):**
 ```
-Server=sqlserver.huydevops.id.vn,14330;Database=Asignment1;User Id=asg_1;Password=Asignment1@App2026!;TrustServerCertificate=True;
+Server=192.168.58.24,1433;Database=Asignment1;User Id=asg_1;Password=Asignment1@App2026!;TrustServerCertificate=True;
 ```
 
 **Cách B — Tự chạy SQL Server local bằng Docker (nếu server chung sập hoặc muốn test riêng):**
