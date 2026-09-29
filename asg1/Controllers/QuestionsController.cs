@@ -14,29 +14,38 @@ namespace asg1.Controllers
         private const int PreviewLength = 120;
 
         private readonly IQuestionService _service;
+        private readonly IConfiguration _configuration;
 
-        public QuestionsController(IQuestionService service)
+        public QuestionsController(IQuestionService service, IConfiguration configuration)
         {
             _service = service;
+            _configuration = configuration;
         }
 
-        public async Task<IActionResult> Index(string? keyword, int? subjectId, QuestionStatus? status)
+        public async Task<IActionResult> Index(string? keyword, int? subjectId, QuestionStatus? status, int page = 1)
         {
-            var questions = await _service.SearchAsync(new QuestionQuery
+            int pageSize = _configuration.GetValue<int>("PaginationSettings:PageSize", 5);
+            var query = new QuestionQuery
             {
                 Keyword = keyword,
                 SubjectId = subjectId,
-                Status = status
-            });
+                Status = status,
+                Page = page,
+                PageSize = pageSize
+            };
+            
+            var result = await _service.SearchAsync(query);
 
             var vm = new QuestionIndexViewModel
             {
                 Keyword = keyword,
                 SubjectId = subjectId,
                 Status = status,
+                CurrentPage = page,
+                TotalPages = (int)Math.Ceiling(result.TotalCount / (double)pageSize),
                 SubjectOptions = await BuildSubjectOptionsAsync("Tất cả môn học", subjectId),
                 StatusOptions = BuildStatusOptions(status),
-                Items = questions.Select(q => new QuestionIndexViewModel.QuestionListItem
+                Items = result.Items.Select(q => new QuestionIndexViewModel.QuestionListItem
                 {
                     QuestionId = q.QuestionId,
                     Content = Truncate(q.Content),
