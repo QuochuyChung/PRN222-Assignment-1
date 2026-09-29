@@ -1,3 +1,4 @@
+using asg1.BLL.AI;
 using asg1.BLL.Services;
 using asg1.DAL.Data;
 using asg1.DAL.Repositories;
@@ -11,6 +12,13 @@ builder.Services.AddAppDbContext(builder.Configuration);
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IAiQuestionService, AiQuestionService>();
+
+builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
+builder.Services.AddHttpClient<IAiQuestionGenerator, GeminiQuestionGenerator>(client =>
+{
+    client.Timeout = TimeSpan.FromMinutes(2);
+});
 
 var app = builder.Build();
 

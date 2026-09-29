@@ -57,46 +57,54 @@ Lý do: CRUD thuần, không phụ thuộc AI/voice phức tạp, và là dữ l
 
 ## 4. Kiến trúc & công nghệ
 
-- **.NET 8**, ASP.NET Core MVC — **1 project duy nhất**, 3 lớp chính là **Model – View – Controller** (đúng nghĩa MVC, không tách DAL/BLL thành project riêng).
-- **Controller**: nhận request từ View, gọi xuống Model để lấy/ghi dữ liệu, trả kết quả lại cho View. Không chứa business logic hay truy vấn DB trực tiếp.
-- **Model**: chứa TẤT CẢ phần dữ liệu — entity, `DbContext` (EF Core), và các lớp truy xuất dữ liệu (repository). Đây là nơi duy nhất chạm vào database.
-- **View**: Razor views (`.cshtml`), chỉ hiển thị dữ liệu Controller đưa xuống.
+- **.NET 8**, ASP.NET Core MVC theo **kiến trúc 3 lớp**. Mỗi lớp là 1 project riêng trong solution, phụ thuộc 1 chiều `asg1 → asg1.BLL → asg1.DAL` (lớp dưới không biết gì về lớp trên):
+  - **`asg1` (Presentation)**: MVC. Controller nhận request từ View, gọi Service ở BLL rồi trả kết quả cho View. `Models/` ở đây là ViewModel (dữ liệu dành riêng cho từng màn hình). Controller không truy vấn DB trực tiếp.
+  - **`asg1.BLL` (Business Logic)**: Service xử lý nghiệp vụ và validate, DTO trả dữ liệu cho Controller, tích hợp AI (Gemini). Chỉ gọi xuống DAL qua interface Repository.
+  - **`asg1.DAL` (Data Access)**: Entity, `AppDbContext` (EF Core), Repository, Migrations. Đây là nơi duy nhất chạm vào database.
+- "Model" theo nghĩa MVC chính là `asg1.BLL` + `asg1.DAL`: nơi Controller gọi vào để lấy/ghi dữ liệu.
 - Database: SQL Server (EF Core Code-First), connection string trong `asg1/appsettings.json`.
+
+Luồng dữ liệu: `View → Controller → Service (BLL) → Repository (DAL) → SQL Server`, chiều về đi ngược lại. Dữ liệu đổi dạng theo từng lớp: `Entity (DAL) → DTO (BLL) → ViewModel (Presentation) → View`.
 
 ```
 asg1.slnx
-└── asg1                               (project duy nhất)
-    ├── Models/
-    │   ├── Entities/                  (Subject, Question, ...)
-    │   ├── Enums/                     (BloomLevel, QuestionStatus, QuestionSource)
-    │   ├── Data/AppDbContext.cs       (EF Core DbContext)
-    │   └── Repositories/              (IGenericRepository<T>, GenericRepository<T>, repo cụ thể)
-    ├── Controllers/
-    ├── Views/
-    └── appsettings.json               (connection string)
+├── asg1                               (Presentation - MVC)
+│   ├── Controllers/                   (Home, Questions, AiQuestions)
+│   ├── Models/                        (ViewModel cho View)
+│   ├── Views/
+│   └── appsettings.json               (connection string + Gemini key, bị .gitignore)
+├── asg1.BLL                           (Business Logic)
+│   ├── Services/                      (IQuestionService, IAiQuestionService, ...)
+│   ├── Dtos/
+│   ├── AI/                            (tích hợp Gemini sinh câu hỏi)
+│   └── Common/                        (ServiceResult, ErrorKeys)
+└── asg1.DAL                           (Data Access)
+    ├── Entities/                      (Subject, Question, RubricCriterion)
+    ├── Enums/                         (BloomLevel, QuestionStatus, QuestionSource)
+    ├── Data/                          (AppDbContext, DbSeeder)
+    ├── Repositories/                  (IGenericRepository<T>, repo cụ thể)
+    └── Migrations/
 ```
 
-## 5. Tiến độ hiện tại (base scaffold)
+## 5. Tiến độ hiện tại
 
 Đã làm:
-- [x] 1 project ASP.NET Core MVC duy nhất: `asg1` (net8.0). Đã xóa cấu trúc DAL/BLL tách project trước đó — gộp hết vào `Models/`.
-- [x] Cài `Microsoft.EntityFrameworkCore.SqlServer` + `.Design` vào `asg1`.
-- [x] Enums mẫu: `BloomLevel`, `QuestionStatus`, `QuestionSource` (`Models/Enums`).
-- [x] Entity: `Subject`, `Question` (FK `SubjectId`), `RubricCriterion` (FK `QuestionId`) — đủ 3 entity cốt lõi của Nhóm 1 (`Models/Entities/`).
-- [x] `AppDbContext` (`Models/Data/AppDbContext.cs`) với `DbSet<Subject>`, `DbSet<Question>`, `DbSet<RubricCriterion>` + khai báo quan hệ FK (`Subject 1-N Question`, `Question 1-N RubricCriterion`).
-- [x] Generic Repository pattern trong `Models/Repositories`: `IGenericRepository<T>` / `GenericRepository<T>` + ví dụ cụ thể hóa `ISubjectRepository` / `SubjectRepository`.
-- [x] Đăng ký `AppDbContext` + `ISubjectRepository` vào DI container trong `Program.cs`.
-- [x] Kết nối database thật của nhóm (`192.168.58.24`, database `Asignment1`, user `asg_1` chỉ có quyền trên đúng DB này).
-- [x] Migration `InitialCreate` + `AddQuestionAndRubric` đã tạo và **chạy thật thành công** lên database — bảng `Subjects`, `Questions`, `RubricCriteria` đã tồn tại trên DB thật, đúng FK/index.
-- [x] SQL Server local dự phòng qua Docker (`docker-compose.yml`) cho ai cần test riêng không phụ thuộc DB chung.
-- [x] `appsettings.example.json` làm mẫu; `.gitignore` loại `appsettings.json` thật và cả thư mục `db/` (chứa script có password thật) ra khỏi git.
-- [x] Script tạo user DB riêng, chỉ có quyền trên đúng 1 database (`db/create-app-user.sql`, không lên git).
-- [x] Build solution thành công (`dotnet build` — 0 lỗi).
+- [x] Solution 3 project theo kiến trúc 3 lớp: `asg1` (Presentation), `asg1.BLL`, `asg1.DAL` (net8.0), phụ thuộc 1 chiều `asg1 → asg1.BLL → asg1.DAL`.
+- [x] Entity `Subject`, `Question` (FK `SubjectId`), `RubricCriterion` (FK `QuestionId`); enum `BloomLevel`, `QuestionStatus`, `QuestionSource`.
+- [x] `AppDbContext` với 3 `DbSet` và quan hệ FK (`Subject 1-N Question`, `Question 1-N RubricCriterion`); `DbSeeder` tạo sẵn vài môn học mẫu.
+- [x] Repository: `IGenericRepository<T>` / `GenericRepository<T>`, `ISubjectRepository`, `IQuestionRepository` (tìm kiếm, lọc theo môn/trạng thái, kiểm tra trùng nội dung).
+- [x] Migration `InitialCreate` + `AddQuestionAndRubric` đã chạy lên database của nhóm: có bảng `Subjects`, `Questions`, `RubricCriteria`.
+- [x] **CRUD câu hỏi thủ công** (`/Questions`): danh sách, tìm kiếm, lọc theo môn học và trạng thái, tạo (có "Lưu & tạo thêm"), sửa, xóa, xem chi tiết. Gắn mức Bloom khi tạo/sửa. Đi qua `QuestionService` (BLL) có validate và chặn trùng nội dung trong cùng môn.
+- [x] **AI sinh câu hỏi bằng Gemini** (`/AiQuestions`): tải PDF/Word/PowerPoint/TXT/Markdown (tối đa 20 MB), chọn môn học và số câu, câu hỏi sinh ra được lưu với `Source = AIGenerated`, `Status = Draft`. Cần Gemini API key (xem mục 7).
+- [x] Kết nối database thật của nhóm; Docker SQL Server local làm phương án dự phòng (`docker-compose.yml`).
+- [x] `appsettings.example.json` làm mẫu; `.gitignore` loại `appsettings.json` thật và thư mục `db/` ra khỏi git.
+- [x] Build cả solution: 0 lỗi, 0 warning.
 
 Chưa làm (còn lại để hoàn thành asg1):
-- [ ] Chưa có Controller/View nào ngoài `HomeController` mặc định — chưa có ví dụ CRUD hoàn chỉnh theo pattern Model-View-Controller. Đây là phần P2/P3/P4/P5 bắt đầu làm được ngay từ bây giờ vì entity đã đủ.
-- [ ] Chưa có `IQuestionRepository`/`IRubricCriterionRepository` cụ thể hóa (mới có generic `IGenericRepository<T>`) — mỗi người khi cần query riêng (VD lọc câu hỏi theo `Status`) thì tự thêm interface + implementation theo đúng pattern của `ISubjectRepository`.
-- [ ] Có thể cần thêm entity `Lecturer`/`Account` (Nhóm 7) nếu muốn có `CreatedBy` thật cho `Question` — hiện chưa có, để dành cho asg2/group project.
+- [ ] **Quản lý rubric**: chưa có màn hình thêm/sửa/xóa `RubricCriterion` cho từng câu hỏi (trang chi tiết mới chỉ hiển thị rubric nếu có).
+- [ ] **Luồng duyệt câu hỏi**: chưa có thao tác chuyển `Draft → Approved/Rejected`. Trạng thái mới chỉ để hiển thị và lọc, câu hỏi AI sinh ra đang nằm ở `Draft`.
+- [ ] Câu hỏi do AI sinh ra chưa được kiểm tra trùng nội dung như câu tạo tay, nên tải cùng một tài liệu 2 lần có thể tạo câu trùng.
+- [ ] Chưa có entity `Lecturer`/`Account` (Nhóm 7) để lưu người tạo câu hỏi (`CreatedBy`), để dành cho asg2/group project.
 
 ## 6. Đề xuất chia task cho nhóm
 
@@ -130,8 +138,9 @@ Sau đó mở `asg1/appsettings.json`, điền connection string vào `Connectio
 
 **Cách A — Dùng chung SQL Server của nhóm (khuyến khích, khỏi cài gì thêm):**
 ```
-Server=192.168.58.24,1433;Database=Asignment1;User Id=asg_1;Password=Asignment1@App2026!;TrustServerCertificate=True;
+Server=<địa-chỉ-server>,1433;Database=Asignment1;User Id=<user>;Password=<password>;TrustServerCertificate=True;
 ```
+Xin địa chỉ server, user và password từ leader nhóm. **Không ghi thông tin thật vào README hay commit lên git** (repo này để public).
 
 **Cách B — Tự chạy SQL Server local bằng Docker (nếu server chung sập hoặc muốn test riêng):**
 ```bash
@@ -141,8 +150,10 @@ Container chạy ở `localhost:1433`, user `sa`, password xem trong `docker-com
 
 ### Bước 2 — Tạo bảng trong database (migration)
 ```bash
-dotnet ef database update --project asg1 --startup-project asg1
+dotnet ef database update --project asg1.DAL --startup-project asg1
 ```
+Migration nằm trong `asg1.DAL` nên `--project` phải trỏ vào `asg1.DAL` (còn `--startup-project` là `asg1`). Nếu trỏ `--project asg1` sẽ báo lỗi "target project doesn't match your migrations assembly".
+
 User dùng để connect cần có quyền `db_ddladmin` trở lên để tạo bảng lúc migrate. Nếu gặp lỗi `CREATE TABLE permission denied`, nhờ người quản lý DB chạy giúp:
 ```sql
 USE Asignment1;
@@ -157,9 +168,20 @@ dotnet run --project asg1
 ```
 Mặc định chạy ở `http://localhost:5163` (xem `asg1/Properties/launchSettings.json` nếu muốn đổi port).
 
+### Cấu hình Gemini (chỉ cần cho tính năng AI sinh câu hỏi)
+Trang `/AiQuestions` cần API key của Google Gemini (lấy từ leader nhóm, hoặc tự tạo ở Google AI Studio). Điền vào `asg1/appsettings.json` (file đã bị `.gitignore` nên key không bị đẩy lên git):
+```json
+"Gemini": {
+  "ApiKey": "<gemini-api-key>",
+  "Model": "gemini-3.1-flash-lite",
+  "BaseUrl": "https://generativelanguage.googleapis.com/v1beta"
+}
+```
+Hoặc đặt biến môi trường `Gemini__ApiKey` thay cho việc lưu key trong file. Nếu chưa có key, trang này sẽ báo "Chưa cấu hình Gemini API key", các chức năng khác vẫn chạy bình thường.
+
 ### Khi thêm entity mới (Question, RubricCriterion, ...)
 Sau khi thêm entity + khai báo `DbSet` mới trong `AppDbContext`, tạo migration mới rồi update lại DB:
 ```bash
-dotnet ef migrations add <TenMigration> --project asg1 --startup-project asg1
-dotnet ef database update --project asg1 --startup-project asg1
+dotnet ef migrations add <TenMigration> --project asg1.DAL --startup-project asg1
+dotnet ef database update --project asg1.DAL --startup-project asg1
 ```
