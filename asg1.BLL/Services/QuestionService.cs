@@ -19,10 +19,10 @@ namespace asg1.BLL.Services
             _subjects = subjects;
         }
 
-        public async Task<IReadOnlyList<QuestionDto>> SearchAsync(QuestionQuery query)
+        public async Task<(IReadOnlyList<QuestionDto> Items, int TotalCount)> SearchAsync(QuestionQuery query)
         {
-            var entities = await _questions.SearchAsync(query.SubjectId, query.Status, query.Keyword);
-            return entities.Select(Map).ToList();
+            var result = await _questions.SearchAsync(query.SubjectId, query.Status, query.Keyword, query.Page, query.PageSize);
+            return (result.Items.Select(Map).ToList(), result.TotalCount);
         }
 
         public async Task<QuestionDto?> GetByIdAsync(int id)
