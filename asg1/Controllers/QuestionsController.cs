@@ -183,6 +183,50 @@ namespace asg1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var result = await _service.ChangeStatusAsync(id, QuestionStatus.Approved);
+            if (result.Errors.ContainsKey(ErrorKeys.NotFound))
+            {
+                return NotFound();
+            }
+
+            if (result.IsSuccess)
+            {
+                TempData["Success"] = "Đã duyệt câu hỏi thành công.";
+            }
+            else
+            {
+                TempData["Error"] = "Có lỗi xảy ra khi duyệt câu hỏi.";
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reject(int id)
+        {
+            var result = await _service.ChangeStatusAsync(id, QuestionStatus.Rejected);
+            if (result.Errors.ContainsKey(ErrorKeys.NotFound))
+            {
+                return NotFound();
+            }
+
+            if (result.IsSuccess)
+            {
+                TempData["Success"] = "Đã từ chối câu hỏi thành công.";
+            }
+            else
+            {
+                TempData["Error"] = "Có lỗi xảy ra khi từ chối câu hỏi.";
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
         private async Task<SelectList> BuildSubjectOptionsAsync(string emptyLabel, int? selected = null)
         {
             var subjects = await _service.GetSubjectOptionsAsync();

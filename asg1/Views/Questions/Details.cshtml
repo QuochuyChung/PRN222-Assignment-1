@@ -57,33 +57,6 @@
                 </dl>
 
                 <hr class="my-4" />
-                <h5 class="text-primary mb-3"><i class="bi bi-list-check"></i> Rubric chấm điểm (@Model.RubricCriteria.Count)</h5>
-                @if (!Model.RubricCriteria.Any())
-                {
-                    <div class="alert alert-info py-2"><i class="bi bi-info-circle"></i> Câu hỏi chưa có tiêu chí chấm điểm.</div>
-                }
-                else
-                {
-                    <table class="table table-sm table-bordered">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Tiêu chí</th>
-                                <th style="width: 140px;">Điểm tối đa</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var criterion in Model.RubricCriteria)
-                            {
-                                <tr>
-                                    <td>@criterion.CriterionName</td>
-                                    <td>@criterion.MaxScore</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-
-<hr />
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0">Rubric chấm điểm (@Model.RubricCriteria.Count tiêu chí)</h4>
@@ -138,6 +111,20 @@ else
                         <i class="bi bi-arrow-left"></i> Quay lại
                     </a>
                     <div>
+                        @if (Model.Status == asg1.DAL.Enums.QuestionStatus.Draft)
+                        {
+                            <form asp-action="Approve" asp-route-id="@Model.QuestionId" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-success me-2" onclick="return confirm('Bạn có chắc chắn muốn duyệt câu hỏi này không?');">
+                                    <i class="bi bi-check-circle"></i> Duyệt
+                                </button>
+                            </form>
+                            <form asp-action="Reject" asp-route-id="@Model.QuestionId" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-warning me-2" onclick="return confirm('Bạn có chắc chắn muốn từ chối câu hỏi này không?');">
+                                    <i class="bi bi-x-circle"></i> Từ chối
+                                </button>
+                            </form>
+                        }
+                        
                         <a asp-action="Edit" asp-route-id="@Model.QuestionId" class="btn btn-primary me-2">
                             <i class="bi bi-pencil"></i> Sửa
                         </a>
@@ -151,8 +138,3 @@ else
     </div>
 </div>
 
-<div class="mt-4">
-    <a asp-action="Edit" asp-route-id="@Model.QuestionId" class="btn btn-primary">Sửa câu hỏi</a>
-    <a asp-action="Delete" asp-route-id="@Model.QuestionId" class="btn btn-outline-danger">Xóa câu hỏi</a>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại danh sách</a>
-</div>

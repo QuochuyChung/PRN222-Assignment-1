@@ -11,5 +11,6 @@ namespace asg1.BLL.Services
         Task<ServiceResult<QuestionDto>> CreateAsync(QuestionSaveDto dto);
         Task<ServiceResult<QuestionDto>> UpdateAsync(int id, QuestionSaveDto dto);
         Task<ServiceResult> DeleteAsync(int id);
+        Task<ServiceResult> ChangeStatusAsync(int id, asg1.DAL.Enums.QuestionStatus status);
     }
 }

@@ -107,6 +107,21 @@ namespace asg1.BLL.Services
             return ServiceResult.Success();
         }
 
+        public async Task<ServiceResult> ChangeStatusAsync(int id, QuestionStatus status)
+        {
+            var entity = await _questions.GetByIdAsync(id);
+            if (entity is null)
+            {
+                return ServiceResult.Failure(ErrorKeys.NotFound, "Không tìm thấy câu hỏi.");
+            }
+
+            entity.Status = status;
+            _questions.Update(entity);
+            await _questions.SaveChangesAsync();
+
+            return ServiceResult.Success();
+        }
+
         private async Task<Dictionary<string, string[]>> ValidateAsync(QuestionSaveDto dto, int? excludeQuestionId)
         {
             var errors = new Dictionary<string, string[]>();
