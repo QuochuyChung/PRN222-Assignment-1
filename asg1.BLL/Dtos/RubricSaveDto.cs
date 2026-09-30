@@ -1,8 +1,7 @@
 namespace asg1.BLL.Dtos
 {
-    public class RubricDto
+    public class RubricSaveDto
     {
-        public int RubricCriterionId { get; set; }
         public int QuestionId { get; set; }
         public string CriterionName { get; set; } = string.Empty;
         public string? Description { get; set; }

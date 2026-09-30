@@ -158,6 +158,7 @@ namespace asg1.BLL.Services
                 .Select(r => new RubricDto
                 {
                     RubricCriterionId = r.RubricCriterionId,
+                    QuestionId = r.QuestionId,
                     CriterionName = r.CriterionName,
                     Description = r.Description,
                     MaxScore = r.MaxScore

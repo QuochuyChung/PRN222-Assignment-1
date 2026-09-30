@@ -92,16 +92,16 @@ asg1.slnx
 - [x] Solution 3 project theo kiến trúc 3 lớp: `asg1` (Presentation), `asg1.BLL`, `asg1.DAL` (net8.0), phụ thuộc 1 chiều `asg1 → asg1.BLL → asg1.DAL`.
 - [x] Entity `Subject`, `Question` (FK `SubjectId`), `RubricCriterion` (FK `QuestionId`); enum `BloomLevel`, `QuestionStatus`, `QuestionSource`.
 - [x] `AppDbContext` với 3 `DbSet` và quan hệ FK (`Subject 1-N Question`, `Question 1-N RubricCriterion`); `DbSeeder` tạo sẵn vài môn học mẫu.
-- [x] Repository: `IGenericRepository<T>` / `GenericRepository<T>`, `ISubjectRepository`, `IQuestionRepository` (tìm kiếm, lọc theo môn/trạng thái, kiểm tra trùng nội dung).
+- [x] Repository: `IGenericRepository<T>` / `GenericRepository<T>`, `ISubjectRepository`, `IQuestionRepository`, `IRubricRepository`.
 - [x] Migration `InitialCreate` + `AddQuestionAndRubric` đã chạy lên database của nhóm: có bảng `Subjects`, `Questions`, `RubricCriteria`.
 - [x] **CRUD câu hỏi thủ công** (`/Questions`): danh sách, tìm kiếm, lọc theo môn học và trạng thái, tạo (có "Lưu & tạo thêm"), sửa, xóa, xem chi tiết. Gắn mức Bloom khi tạo/sửa. Đi qua `QuestionService` (BLL) có validate và chặn trùng nội dung trong cùng môn.
+- [x] **Quản lý rubric** (P3): thêm/sửa/xóa tiêu chí rubric (`RubricCriterion`) cho từng câu hỏi, validate điểm tối đa và tên tiêu chí, hiển thị và tính tổng điểm tối đa trên trang chi tiết câu hỏi (`Questions/Details`).
 - [x] **AI sinh câu hỏi bằng Gemini** (`/AiQuestions`): tải PDF/Word/PowerPoint/TXT/Markdown (tối đa 20 MB), chọn môn học và số câu, câu hỏi sinh ra được lưu với `Source = AIGenerated`, `Status = Draft`. Cần Gemini API key (xem mục 7).
 - [x] Kết nối database thật của nhóm; Docker SQL Server local làm phương án dự phòng (`docker-compose.yml`).
 - [x] `appsettings.example.json` làm mẫu; `.gitignore` loại `appsettings.json` thật và thư mục `db/` ra khỏi git.
 - [x] Build cả solution: 0 lỗi, 0 warning.
 
 Chưa làm (còn lại để hoàn thành asg1):
-- [ ] **Quản lý rubric**: chưa có màn hình thêm/sửa/xóa `RubricCriterion` cho từng câu hỏi (trang chi tiết mới chỉ hiển thị rubric nếu có).
 - [ ] **Luồng duyệt câu hỏi**: chưa có thao tác chuyển `Draft → Approved/Rejected`. Trạng thái mới chỉ để hiển thị và lọc, câu hỏi AI sinh ra đang nằm ở `Draft`.
 - [ ] Câu hỏi do AI sinh ra chưa được kiểm tra trùng nội dung như câu tạo tay, nên tải cùng một tài liệu 2 lần có thể tạo câu trùng.
 - [ ] Chưa có entity `Lecturer`/`Account` (Nhóm 7) để lưu người tạo câu hỏi (`CreatedBy`), để dành cho asg2/group project.

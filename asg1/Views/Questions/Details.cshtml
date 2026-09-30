@@ -3,6 +3,21 @@
     ViewData["Title"] = "Chi tiết câu hỏi";
 }
 
+@if (TempData["Success"] is string successMessage)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @successMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] is string errorMessage)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @errorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <h1>Chi tiết câu hỏi #@Model.QuestionId</h1>
 <hr />
 
@@ -26,34 +41,59 @@
     <dd class="col-sm-9">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</dd>
 </dl>
 
-<h4>Rubric chấm điểm (@Model.RubricCriteria.Count)</h4>
+<hr />
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Rubric chấm điểm (@Model.RubricCriteria.Count tiêu chí)</h4>
+    <a asp-controller="Rubrics" asp-action="Create" asp-route-questionId="@Model.QuestionId" class="btn btn-success">
+        + Thêm tiêu chí rubric
+    </a>
+</div>
+
 @if (!Model.RubricCriteria.Any())
 {
-    <div class="alert alert-info">Câu hỏi chưa có tiêu chí chấm điểm.</div>
+    <div class="alert alert-info">
+        Câu hỏi chưa có tiêu chí chấm điểm. Hãy bấm <strong>+ Thêm tiêu chí rubric</strong> để tạo tiêu chí chấm điểm cho câu hỏi này.
+    </div>
 }
 else
 {
-    <table class="table table-sm table-bordered">
-        <thead>
+    var totalScore = Model.RubricCriteria.Sum(r => r.MaxScore);
+    <table class="table table-sm table-bordered table-hover align-middle">
+        <thead class="table-light">
             <tr>
-                <th>Tiêu chí</th>
-                <th style="width: 140px;">Điểm tối đa</th>
+                <th style="width: 25%;">Tiêu chí</th>
+                <th>Mô tả / Hướng dẫn chấm</th>
+                <th style="width: 130px;" class="text-end">Điểm tối đa</th>
+                <th style="width: 140px;" class="text-center">Thao tác</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var criterion in Model.RubricCriteria)
             {
                 <tr>
-                    <td>@criterion.CriterionName</td>
-                    <td>@criterion.MaxScore</td>
+                    <td class="fw-semibold">@criterion.CriterionName</td>
+                    <td>@(string.IsNullOrWhiteSpace(criterion.Description) ? "—" : criterion.Description)</td>
+                    <td class="text-end fw-bold text-primary">@criterion.MaxScore</td>
+                    <td class="text-center">
+                        <a asp-controller="Rubrics" asp-action="Edit" asp-route-id="@criterion.RubricCriterionId" class="btn btn-sm btn-outline-primary">Sửa</a>
+                        <a asp-controller="Rubrics" asp-action="Delete" asp-route-id="@criterion.RubricCriterionId" class="btn btn-sm btn-outline-danger">Xóa</a>
+                    </td>
                 </tr>
             }
         </tbody>
+        <tfoot class="table-light">
+            <tr>
+                <th colspan="2" class="text-end">Tổng điểm tối đa:</th>
+                <th class="text-end text-success fs-6">@totalScore</th>
+                <th></th>
+            </tr>
+        </tfoot>
     </table>
 }
 
-<p>
-    <a asp-action="Edit" asp-route-id="@Model.QuestionId" class="btn btn-primary">Sửa</a>
-    <a asp-action="Delete" asp-route-id="@Model.QuestionId" class="btn btn-outline-danger">Xóa</a>
-    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
-</p>
+<div class="mt-4">
+    <a asp-action="Edit" asp-route-id="@Model.QuestionId" class="btn btn-primary">Sửa câu hỏi</a>
+    <a asp-action="Delete" asp-route-id="@Model.QuestionId" class="btn btn-outline-danger">Xóa câu hỏi</a>
+    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại danh sách</a>
+</div>

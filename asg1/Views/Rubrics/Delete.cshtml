@@ -1,0 +1,36 @@
+@model RubricDeleteViewModel
+@{
+    ViewData["Title"] = "Xóa tiêu chí rubric";
+}
+
+<h1 class="text-danger">Xóa tiêu chí rubric</h1>
+<div class="alert alert-warning">
+    <strong>Cảnh báo:</strong> Bạn có chắc chắn muốn xóa tiêu chí rubric này? Hành động này không thể hoàn tác.
+</div>
+<hr />
+
+<div class="card mb-4 bg-light">
+    <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">
+            <span class="badge bg-secondary">@Model.SubjectCode</span> @Model.SubjectName
+        </h6>
+        <p class="card-text"><strong>Câu hỏi:</strong> @Model.QuestionContent</p>
+    </div>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Tên tiêu chí</dt>
+    <dd class="col-sm-9 font-weight-bold">@Model.CriterionName</dd>
+
+    <dt class="col-sm-3">Mô tả / Hướng dẫn</dt>
+    <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Description) ? "—" : Model.Description)</dd>
+
+    <dt class="col-sm-3">Điểm tối đa</dt>
+    <dd class="col-sm-9"><span class="badge bg-primary fs-6">@Model.MaxScore</span></dd>
+</dl>
+
+<form asp-action="Delete" asp-route-id="@Model.RubricCriterionId" method="post">
+    <input type="hidden" asp-for="RubricCriterionId" />
+    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+    <a asp-controller="Questions" asp-action="Details" asp-route-id="@Model.QuestionId" class="btn btn-outline-secondary">Hủy bỏ</a>
+</form>
