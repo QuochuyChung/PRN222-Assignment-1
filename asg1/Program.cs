@@ -11,8 +11,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAppDbContext(builder.Configuration);
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<IRubricRepository, RubricRepository>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IAiQuestionService, AiQuestionService>();
+builder.Services.AddScoped<IRubricService, RubricService>();
 
 builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
 builder.Services.AddHttpClient<IAiQuestionGenerator, GeminiQuestionGenerator>(client =>
