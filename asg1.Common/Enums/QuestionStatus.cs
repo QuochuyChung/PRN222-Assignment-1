@@ -1,16 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace asg1.DAL.Enums
+namespace asg1.Common.Enums
 {
     public enum QuestionStatus
     {
-        [Display(Name = "Nháp")]
+        [Display(Name = "Draft")]
         Draft = 1,
 
-        [Display(Name = "Đã duyệt")]
+        [Display(Name = "Approved")]
         Approved = 2,
 
-        [Display(Name = "Bị loại")]
+        [Display(Name = "Rejected")]
         Rejected = 3
     }
 }

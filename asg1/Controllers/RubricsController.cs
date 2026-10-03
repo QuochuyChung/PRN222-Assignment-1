@@ -1,5 +1,5 @@
 using asg1.BLL.Common;
-using asg1.BLL.Dtos;
+using asg1.Common.Dtos;
 using asg1.BLL.Services;
 using asg1.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -58,7 +58,7 @@ namespace asg1.Controllers
             var result = await _rubricService.CreateAsync(dto);
             if (result.IsSuccess)
             {
-                TempData["Success"] = "Đã thêm tiêu chí rubric thành công.";
+                TempData["Success"] = "Rubric criterion added successfully.";
                 return RedirectToAction("Details", "Questions", new { id = vm.QuestionId });
             }
 
@@ -123,7 +123,7 @@ namespace asg1.Controllers
 
             if (result.IsSuccess)
             {
-                TempData["Success"] = "Đã cập nhật tiêu chí rubric thành công.";
+                TempData["Success"] = "Rubric criterion updated successfully.";
                 return RedirectToAction("Details", "Questions", new { id = vm.QuestionId });
             }
 
@@ -172,11 +172,11 @@ namespace asg1.Controllers
 
             if (result.IsSuccess)
             {
-                TempData["Success"] = "Đã xóa tiêu chí rubric thành công.";
+                TempData["Success"] = "Rubric criterion deleted successfully.";
                 return RedirectToAction("Details", "Questions", new { id = questionId });
             }
 
-            TempData["Error"] = "Không thể xóa tiêu chí rubric.";
+            TempData["Error"] = "Could not delete the rubric criterion.";
             return RedirectToAction("Details", "Questions", new { id = questionId });
         }
 

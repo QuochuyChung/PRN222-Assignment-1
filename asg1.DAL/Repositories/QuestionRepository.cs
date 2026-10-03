@@ -1,6 +1,6 @@
 using asg1.DAL.Data;
 using asg1.DAL.Entities;
-using asg1.DAL.Enums;
+using asg1.Common.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace asg1.DAL.Repositories

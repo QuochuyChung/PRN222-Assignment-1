@@ -1,4 +1,4 @@
-namespace asg1.BLL.Dtos
+namespace asg1.Common.Dtos
 {
     public class SubjectLookupDto
     {

@@ -1,7 +1,7 @@
 using asg1.BLL.Common;
-using asg1.BLL.Dtos;
+using asg1.Common.Dtos;
 using asg1.DAL.Entities;
-using asg1.DAL.Enums;
+using asg1.Common.Enums;
 using asg1.DAL.Repositories;
 
 namespace asg1.BLL.Services
@@ -74,7 +74,7 @@ namespace asg1.BLL.Services
             var entity = await _questions.GetByIdWithDetailsAsync(id);
             if (entity is null)
             {
-                return ServiceResult<QuestionDto>.Failure(ErrorKeys.NotFound, "Không tìm thấy câu hỏi.");
+                return ServiceResult<QuestionDto>.Failure(ErrorKeys.NotFound, "Question not found.");
             }
 
             var errors = await ValidateAsync(dto, excludeQuestionId: id);
@@ -98,7 +98,7 @@ namespace asg1.BLL.Services
             var entity = await _questions.GetByIdWithDetailsAsync(id);
             if (entity is null)
             {
-                return ServiceResult.Failure(ErrorKeys.NotFound, "Không tìm thấy câu hỏi.");
+                return ServiceResult.Failure(ErrorKeys.NotFound, "Question not found.");
             }
 
             _questions.Remove(entity);
@@ -114,29 +114,29 @@ namespace asg1.BLL.Services
             var content = dto.Content?.Trim() ?? string.Empty;
             if (content.Length == 0)
             {
-                errors["Content"] = new[] { "Nội dung câu hỏi không được để trống." };
+                errors["Content"] = new[] { "Question content must not be empty." };
             }
             else if (content.Length > MaxContentLength)
             {
-                errors["Content"] = new[] { $"Nội dung câu hỏi không được vượt quá {MaxContentLength} ký tự." };
+                errors["Content"] = new[] { $"Question content must not exceed {MaxContentLength} characters." };
             }
 
             if (!Enum.IsDefined(dto.BloomLevel))
             {
-                errors["BloomLevel"] = new[] { "Mức độ Bloom không hợp lệ." };
+                errors["BloomLevel"] = new[] { "Invalid Bloom level." };
             }
 
             var subjectExists = dto.SubjectId > 0 &&
                 (await _subjects.GetByIdAsync(dto.SubjectId)) is not null;
             if (!subjectExists)
             {
-                errors["SubjectId"] = new[] { "Môn học không hợp lệ." };
+                errors["SubjectId"] = new[] { "Invalid subject." };
             }
 
             if (errors.Count == 0 &&
                 await _questions.ExistsSameContentAsync(dto.SubjectId, content, excludeQuestionId))
             {
-                errors["Content"] = new[] { "Nội dung câu hỏi đã tồn tại trong môn học này." };
+                errors["Content"] = new[] { "This question content already exists for this subject." };
             }
 
             return errors;

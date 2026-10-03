@@ -1,5 +1,5 @@
 using asg1.BLL.Common;
-using asg1.BLL.Dtos;
+using asg1.Common.Dtos;
 using asg1.DAL.Entities;
 using asg1.DAL.Repositories;
 
@@ -59,7 +59,7 @@ namespace asg1.BLL.Services
             var entity = await _rubrics.GetByIdWithQuestionAsync(id);
             if (entity is null)
             {
-                return ServiceResult<RubricDto>.Failure(ErrorKeys.NotFound, "Không tìm thấy tiêu chí rubric.");
+                return ServiceResult<RubricDto>.Failure(ErrorKeys.NotFound, "Rubric criterion not found.");
             }
 
             var errors = await ValidateAsync(dto, excludeId: id);
@@ -83,7 +83,7 @@ namespace asg1.BLL.Services
             var entity = await _rubrics.GetByIdWithQuestionAsync(id);
             if (entity is null)
             {
-                return ServiceResult.Failure(ErrorKeys.NotFound, "Không tìm thấy tiêu chí rubric.");
+                return ServiceResult.Failure(ErrorKeys.NotFound, "Rubric criterion not found.");
             }
 
             _rubrics.Remove(entity);
@@ -99,36 +99,36 @@ namespace asg1.BLL.Services
             var question = await _questions.GetByIdWithDetailsAsync(dto.QuestionId);
             if (question is null)
             {
-                errors["QuestionId"] = new[] { "Câu hỏi không tồn tại." };
+                errors["QuestionId"] = new[] { "The question does not exist." };
             }
 
             var name = dto.CriterionName?.Trim() ?? string.Empty;
             if (string.IsNullOrWhiteSpace(name))
             {
-                errors["CriterionName"] = new[] { "Tên tiêu chí không được để trống." };
+                errors["CriterionName"] = new[] { "Criterion name must not be empty." };
             }
             else if (name.Length > MaxNameLength)
             {
-                errors["CriterionName"] = new[] { $"Tên tiêu chí không được vượt quá {MaxNameLength} ký tự." };
+                errors["CriterionName"] = new[] { $"Criterion name must not exceed {MaxNameLength} characters." };
             }
 
             if (!string.IsNullOrWhiteSpace(dto.Description) && dto.Description.Trim().Length > MaxDescriptionLength)
             {
-                errors["Description"] = new[] { $"Mô tả tiêu chí không được vượt quá {MaxDescriptionLength} ký tự." };
+                errors["Description"] = new[] { $"Criterion description must not exceed {MaxDescriptionLength} characters." };
             }
 
             if (dto.MaxScore <= 0)
             {
-                errors["MaxScore"] = new[] { "Điểm tối đa phải lớn hơn 0." };
+                errors["MaxScore"] = new[] { "Max score must be greater than 0." };
             }
             else if (dto.MaxScore > MaxScoreLimit)
             {
-                errors["MaxScore"] = new[] { $"Điểm tối đa không được vượt quá {MaxScoreLimit}." };
+                errors["MaxScore"] = new[] { $"Max score must not exceed {MaxScoreLimit}." };
             }
 
             if (errors.Count == 0 && await _rubrics.ExistsSameNameAsync(dto.QuestionId, name, excludeId))
             {
-                errors["CriterionName"] = new[] { "Tiêu chí này đã tồn tại trong câu hỏi." };
+                errors["CriterionName"] = new[] { "This criterion already exists for the question." };
             }
 
             return errors;

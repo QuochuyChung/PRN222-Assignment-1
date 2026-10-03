@@ -1,9 +1,9 @@
 @model QuestionFormViewModel
 @{
-    ViewData["Title"] = "Sửa câu hỏi";
+    ViewData["Title"] = "Edit Question";
 }
 
-<h1>Sửa câu hỏi #@Model.QuestionId</h1>
+<h1>Edit Question #@Model.QuestionId</h1>
 <hr />
 
 <div class="row">
@@ -33,11 +33,11 @@
             <div class="mb-3">
                 <label asp-for="Status" class="form-label"></label>
                 <input asp-for="Status" class="form-control" readonly />
-                <span class="form-text text-muted">Trạng thái và nguồn được giữ nguyên khi cập nhật.</span>
+                <span class="form-text text-muted">Status and source are kept unchanged when updating.</span>
             </div>
 
-            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-            <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
         </form>
     </div>
 </div>

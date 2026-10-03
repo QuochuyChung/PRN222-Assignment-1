@@ -1,5 +1,5 @@
-using asg1.BLL.Dtos;
-using asg1.DAL.Enums;
+using asg1.Common.Dtos;
+using asg1.Common.Enums;
 
 namespace asg1.Models
 {

@@ -1,13 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace asg1.DAL.Enums
+namespace asg1.Common.Enums
 {
     public enum QuestionSource
     {
-        [Display(Name = "Thủ công")]
+        [Display(Name = "Manual")]
         Manual = 1,
 
-        [Display(Name = "AI sinh")]
+        [Display(Name = "AI generated")]
         AIGenerated = 2
     }
 }

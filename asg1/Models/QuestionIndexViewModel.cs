@@ -1,4 +1,4 @@
-using asg1.DAL.Enums;
+using asg1.Common.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace asg1.Models

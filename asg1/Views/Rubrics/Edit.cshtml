@@ -1,9 +1,9 @@
 @model RubricFormViewModel
 @{
-    ViewData["Title"] = "Chỉnh sửa tiêu chí rubric";
+    ViewData["Title"] = "Edit Rubric Criterion";
 }
 
-<h1>Chỉnh sửa tiêu chí rubric</h1>
+<h1>Edit Rubric Criterion</h1>
 <hr />
 
 <div class="card mb-4 bg-light">
@@ -11,7 +11,7 @@
         <h6 class="card-subtitle mb-2 text-muted">
             <span class="badge bg-secondary">@Model.SubjectCode</span> @Model.SubjectName
         </h6>
-        <p class="card-text"><strong>Câu hỏi:</strong> @Model.QuestionContent</p>
+        <p class="card-text"><strong>Question:</strong> @Model.QuestionContent</p>
     </div>
 </div>
 
@@ -24,14 +24,14 @@
 
             <div class="mb-3">
                 <label asp-for="CriterionName" class="form-label"></label>
-                <input asp-for="CriterionName" class="form-control" placeholder="VD: Nắm vững khái niệm cơ bản..." />
+                <input asp-for="CriterionName" class="form-control" placeholder="e.g.: Solid grasp of basic concepts..." />
                 <span asp-validation-for="CriterionName" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Description" class="form-label"></label>
                 <textarea asp-for="Description" class="form-control" rows="3"
-                          placeholder="Mô tả tiêu chí chi tiết hoặc hướng dẫn chấm điểm..."></textarea>
+                          placeholder="Detailed criterion description or grading guide..."></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 
@@ -42,8 +42,8 @@
             </div>
 
             <div class="mt-4">
-                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                <a asp-controller="Questions" asp-action="Details" asp-route-id="@Model.QuestionId" class="btn btn-outline-secondary">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a asp-controller="Questions" asp-action="Details" asp-route-id="@Model.QuestionId" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </form>
     </div>

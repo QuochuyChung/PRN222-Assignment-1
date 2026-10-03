@@ -1,8 +1,8 @@
 using asg1.BLL.AI;
 using asg1.BLL.Common;
-using asg1.BLL.Dtos;
+using asg1.Common.Dtos;
 using asg1.DAL.Entities;
-using asg1.DAL.Enums;
+using asg1.Common.Enums;
 using asg1.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -79,7 +79,7 @@ namespace asg1.BLL.Services
             {
                 return ServiceResult<IReadOnlyList<GeneratedQuestionDto>>.Failure(
                     string.Empty,
-                    "Đã sinh câu hỏi nhưng không thể lưu vào database. Vui lòng kiểm tra migration và kết nối DB.");
+                    "Questions were generated but could not be saved to the database. Please check the migrations and the DB connection.");
             }
 
             return ServiceResult<IReadOnlyList<GeneratedQuestionDto>>.Success(generated);
@@ -91,27 +91,27 @@ namespace asg1.BLL.Services
 
             if (dto.FileSize <= 0)
             {
-                errors["Document"] = new[] { "Vui lòng chọn tài liệu có nội dung." };
+                errors["Document"] = new[] { "Please select a document with content." };
             }
             else if (dto.FileSize > MaxFileSize)
             {
-                errors["Document"] = new[] { "Tài liệu không được vượt quá 20 MB." };
+                errors["Document"] = new[] { "The document must not exceed 20 MB." };
             }
             else if (!SupportedExtensions.Contains(Path.GetExtension(dto.FileName)))
             {
-                errors["Document"] = new[] { "Chỉ hỗ trợ PDF, Word, PowerPoint, TXT và Markdown." };
+                errors["Document"] = new[] { "Only PDF, Word, PowerPoint, TXT and Markdown are supported." };
             }
 
             if (dto.QuestionCount < MinQuestionCount || dto.QuestionCount > MaxQuestionCount)
             {
-                errors["QuestionCount"] = new[] { $"Số câu hỏi phải từ {MinQuestionCount} đến {MaxQuestionCount}." };
+                errors["QuestionCount"] = new[] { $"Question count must be between {MinQuestionCount} and {MaxQuestionCount}." };
             }
 
             var subjectExists = dto.SubjectId > 0 &&
                 (await _subjects.GetByIdAsync(dto.SubjectId)) is not null;
             if (!subjectExists)
             {
-                errors["SubjectId"] = new[] { "Môn học đã chọn không tồn tại." };
+                errors["SubjectId"] = new[] { "The selected subject does not exist." };
             }
 
             return errors;

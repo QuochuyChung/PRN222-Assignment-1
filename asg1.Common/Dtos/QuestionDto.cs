@@ -1,6 +1,6 @@
-using asg1.DAL.Enums;
+using asg1.Common.Enums;
 
-namespace asg1.BLL.Dtos
+namespace asg1.Common.Dtos
 {
     public class QuestionDto
     {

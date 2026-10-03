@@ -1,21 +1,21 @@
 using System.ComponentModel.DataAnnotations;
-using asg1.BLL.Dtos;
+using asg1.Common.Dtos;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace asg1.Models
 {
     public class AiQuestionGenerationViewModel
     {
-        [Range(1, int.MaxValue, ErrorMessage = "Vui lòng chọn môn học.")]
-        [Display(Name = "Môn học")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a subject.")]
+        [Display(Name = "Subject")]
         public int SubjectId { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn tài liệu.")]
-        [Display(Name = "Tài liệu")]
+        [Required(ErrorMessage = "Please select a document.")]
+        [Display(Name = "Document")]
         public IFormFile? Document { get; set; }
 
-        [Range(1, 20, ErrorMessage = "Số câu hỏi phải từ 1 đến 20.")]
-        [Display(Name = "Số câu hỏi")]
+        [Range(1, 20, ErrorMessage = "Question count must be between 1 and 20.")]
+        [Display(Name = "Question count")]
         public int QuestionCount { get; set; } = 5;
 
         public string? UploadedFileName { get; set; }

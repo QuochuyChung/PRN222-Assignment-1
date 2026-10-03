@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using asg1.BLL.Dtos;
+using asg1.Common.Dtos;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -63,12 +63,12 @@ namespace asg1.BLL.AI
                     {
                         type = "text",
                         text = $"""
-                            Bạn là giảng viên đang xây dựng ngân hàng câu hỏi vấn đáp.
-                            Tên tài liệu: {safeFileName}.
-                            Chỉ dựa trên tài liệu đính kèm, hãy tạo đúng {questionCount} câu hỏi bằng tiếng Việt.
-                            Câu hỏi phải rõ ràng, không trùng ý, có đáp án gợi ý ngắn gọn và phân loại theo Bloom:
-                            Remember, Understand, Apply hoặc Analyze.
-                            Không đưa thông tin không có căn cứ trong tài liệu.
+                            You are an instructor building an oral exam question bank.
+                            Document name: {safeFileName}.
+                            Based only on the attached document, generate exactly {questionCount} questions in English.
+                            Questions must be clear, non-duplicate, have a concise suggested answer, and be classified by Bloom level:
+                            Remember, Understand, Apply, or Analyze.
+                            Do not include information that is not grounded in the document.
                             """
                     }
                 },
@@ -93,7 +93,7 @@ namespace asg1.BLL.AI
             {
                 _logger.LogError(exception, "Could not call the Gemini question generation API.");
                 throw new AiQuestionGenerationException(
-                    "Không thể kết nối tới Gemini. Vui lòng kiểm tra mạng và cấu hình API.",
+                    "Could not connect to Gemini. Please check your network and API configuration.",
                     exception);
             }
 
@@ -108,7 +108,7 @@ namespace asg1.BLL.AI
                         responseJson);
 
                     throw new AiQuestionGenerationException(
-                        $"Gemini trả về lỗi HTTP {(int)response.StatusCode}. Hãy kiểm tra API key, model và hạn mức free tier.");
+                        $"Gemini returned HTTP error {(int)response.StatusCode}. Please check the API key, model, and free-tier quota.");
                 }
 
                 try
@@ -118,7 +118,7 @@ namespace asg1.BLL.AI
 
                     if (envelope?.Questions is null || envelope.Questions.Count == 0)
                     {
-                        throw new AiQuestionGenerationException("Gemini không trả về câu hỏi hợp lệ.");
+                        throw new AiQuestionGenerationException("Gemini did not return any valid questions.");
                     }
 
                     return envelope.Questions;
@@ -130,7 +130,7 @@ namespace asg1.BLL.AI
                 catch (Exception exception) when (exception is JsonException or InvalidOperationException)
                 {
                     _logger.LogError(exception, "Could not parse the Gemini response.");
-                    throw new AiQuestionGenerationException("Không đọc được kết quả do Gemini trả về.", exception);
+                    throw new AiQuestionGenerationException("Could not parse the result returned by Gemini.", exception);
                 }
             }
         }
@@ -176,17 +176,17 @@ namespace asg1.BLL.AI
             if (string.IsNullOrWhiteSpace(_options.ApiKey))
             {
                 throw new AiQuestionGenerationException(
-                    "Chưa cấu hình Gemini API key. Hãy đặt Gemini:ApiKey trong appsettings.json hoặc biến môi trường Gemini__ApiKey.");
+                    "Gemini API key is not configured. Please set Gemini:ApiKey in appsettings.json or the Gemini__ApiKey environment variable.");
             }
 
             if (string.IsNullOrWhiteSpace(_options.Model))
             {
-                throw new AiQuestionGenerationException("Chưa cấu hình model trong Gemini:Model.");
+                throw new AiQuestionGenerationException("Gemini:Model is not configured.");
             }
 
             if (!Uri.TryCreate(_options.BaseUrl, UriKind.Absolute, out _))
             {
-                throw new AiQuestionGenerationException("Gemini:BaseUrl không hợp lệ.");
+                throw new AiQuestionGenerationException("Gemini:BaseUrl is invalid.");
             }
         }
 
@@ -208,12 +208,12 @@ namespace asg1.BLL.AI
                             content = new
                             {
                                 type = "string",
-                                description = "Nội dung câu hỏi vấn đáp bằng tiếng Việt"
+                                description = "Oral exam question content in English"
                             },
                             suggestedAnswer = new
                             {
                                 type = "string",
-                                description = "Đáp án gợi ý ngắn gọn, dựa trên tài liệu"
+                                description = "A concise suggested answer, based on the document"
                             },
                             bloomLevel = new
                             {
@@ -238,7 +238,7 @@ namespace asg1.BLL.AI
                 status.GetString() is not "completed")
             {
                 throw new AiQuestionGenerationException(
-                    $"Gemini chưa hoàn thành yêu cầu (trạng thái: {status.GetString() ?? "không xác định"}).");
+                    $"Gemini has not completed the request (status: {status.GetString() ?? "unknown"}).");
             }
 
             if (!document.RootElement.TryGetProperty("steps", out var steps))

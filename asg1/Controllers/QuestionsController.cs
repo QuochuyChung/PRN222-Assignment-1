@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using asg1.BLL.Common;
-using asg1.BLL.Dtos;
 using asg1.BLL.Services;
-using asg1.DAL.Enums;
+using asg1.Common.Dtos;
+using asg1.Common.Enums;
 using asg1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,7 +34,7 @@ namespace asg1.Controllers
                 Keyword = keyword,
                 SubjectId = subjectId,
                 Status = status,
-                SubjectOptions = await BuildSubjectOptionsAsync("Tất cả môn học", subjectId),
+                SubjectOptions = await BuildSubjectOptionsAsync("All subjects", subjectId),
                 StatusOptions = BuildStatusOptions(status),
                 Items = questions.Select(q => new QuestionIndexViewModel.QuestionListItem
                 {
@@ -67,7 +67,7 @@ namespace asg1.Controllers
         {
             var vm = new QuestionFormViewModel
             {
-                SubjectOptions = await BuildSubjectOptionsAsync("Chọn môn học")
+                SubjectOptions = await BuildSubjectOptionsAsync("Select a subject")
             };
             return View(vm);
         }
@@ -78,21 +78,21 @@ namespace asg1.Controllers
         {
             if (!ModelState.IsValid)
             {
-                vm.SubjectOptions = await BuildSubjectOptionsAsync("Chọn môn học", vm.SubjectId);
+                vm.SubjectOptions = await BuildSubjectOptionsAsync("Select a subject", vm.SubjectId);
                 return View(vm);
             }
 
             var result = await _service.CreateAsync(ToSaveDto(vm));
             if (result.IsSuccess)
             {
-                TempData["Success"] = "Đã tạo câu hỏi thành công.";
+                TempData["Success"] = "Question created successfully.";
                 return nextAction == "stay"
                     ? RedirectToAction(nameof(Create))
                     : RedirectToAction(nameof(Index));
             }
 
             ApplyErrors(result);
-            vm.SubjectOptions = await BuildSubjectOptionsAsync("Chọn môn học", vm.SubjectId);
+            vm.SubjectOptions = await BuildSubjectOptionsAsync("Select a subject", vm.SubjectId);
             return View(vm);
         }
 
@@ -105,7 +105,7 @@ namespace asg1.Controllers
             }
 
             var vm = ToFormVm(question);
-            vm.SubjectOptions = await BuildSubjectOptionsAsync("Chọn môn học", vm.SubjectId);
+            vm.SubjectOptions = await BuildSubjectOptionsAsync("Select a subject", vm.SubjectId);
             return View(vm);
         }
 
@@ -115,7 +115,7 @@ namespace asg1.Controllers
         {
             if (!ModelState.IsValid)
             {
-                vm.SubjectOptions = await BuildSubjectOptionsAsync("Chọn môn học", vm.SubjectId);
+                vm.SubjectOptions = await BuildSubjectOptionsAsync("Select a subject", vm.SubjectId);
                 return View(vm);
             }
 
@@ -127,12 +127,12 @@ namespace asg1.Controllers
 
             if (result.IsSuccess)
             {
-                TempData["Success"] = "Đã cập nhật câu hỏi thành công.";
+                TempData["Success"] = "Question updated successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
             ApplyErrors(result);
-            vm.SubjectOptions = await BuildSubjectOptionsAsync("Chọn môn học", vm.SubjectId);
+            vm.SubjectOptions = await BuildSubjectOptionsAsync("Select a subject", vm.SubjectId);
             return View(vm);
         }
 
@@ -170,7 +170,7 @@ namespace asg1.Controllers
                 return View(ToDetailsVm(question));
             }
 
-            TempData["Success"] = "Đã xóa câu hỏi thành công.";
+            TempData["Success"] = "Question deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -189,7 +189,7 @@ namespace asg1.Controllers
         {
             var options = new List<SelectListItem>
             {
-                new("Tất cả", string.Empty)
+                new("All", string.Empty)
             };
 
             foreach (QuestionStatus value in Enum.GetValues<QuestionStatus>())

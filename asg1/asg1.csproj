@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\asg1.BLL\asg1.BLL.csproj" />
+    <ProjectReference Include="..\asg1.Common\asg1.Common.csproj" />
     <ProjectReference Include="..\asg1.DAL\asg1.DAL.csproj" />
   </ItemGroup>
 

@@ -17,9 +17,9 @@ namespace asg1.DAL.Data
             }
 
             db.Subjects.AddRange(
-                new Subject { Code = "PRN222", Name = "Lập trình .NET Core" },
-                new Subject { Code = "PRF192", Name = "Lập trình C++" },
-                new Subject { Code = "ITE103", Name = "Cơ sở dữ liệu" });
+                new Subject { Code = "PRN222", Name = ".NET Core Programming" },
+                new Subject { Code = "PRF192", Name = "C++ Programming" },
+                new Subject { Code = "ITE103", Name = "Database Systems" });
 
             await db.SaveChangesAsync();
         }

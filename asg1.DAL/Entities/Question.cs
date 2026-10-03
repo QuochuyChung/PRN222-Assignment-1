@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using asg1.DAL.Enums;
+using asg1.Common.Enums;
 
 namespace asg1.DAL.Entities
 {

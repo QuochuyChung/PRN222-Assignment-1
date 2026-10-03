@@ -1,4 +1,4 @@
-using asg1.BLL.Dtos;
+using asg1.Common.Dtos;
 
 namespace asg1.BLL.AI
 {

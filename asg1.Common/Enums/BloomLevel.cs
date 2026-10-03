@@ -1,19 +1,19 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace asg1.DAL.Enums
+namespace asg1.Common.Enums
 {
     public enum BloomLevel
     {
-        [Display(Name = "Nhớ")]
+        [Display(Name = "Remember")]
         Remember = 1,
 
-        [Display(Name = "Hiểu")]
+        [Display(Name = "Understand")]
         Understand = 2,
 
-        [Display(Name = "Vận dụng")]
+        [Display(Name = "Apply")]
         Apply = 3,
 
-        [Display(Name = "Phân tích")]
+        [Display(Name = "Analyze")]
         Analyze = 4
     }
 }

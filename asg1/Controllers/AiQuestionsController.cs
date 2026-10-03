@@ -1,5 +1,5 @@
 using asg1.BLL.Common;
-using asg1.BLL.Dtos;
+using asg1.Common.Dtos;
 using asg1.BLL.Services;
 using asg1.Models;
 using Microsoft.AspNetCore.Mvc;

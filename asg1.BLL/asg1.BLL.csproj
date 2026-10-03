@@ -6,6 +6,7 @@
     <RootNamespace>asg1.BLL</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\asg1.Common\asg1.Common.csproj" />
     <ProjectReference Include="..\asg1.DAL\asg1.DAL.csproj" />
   </ItemGroup>
   <ItemGroup>

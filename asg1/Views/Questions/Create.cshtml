@@ -1,9 +1,9 @@
 @model QuestionFormViewModel
 @{
-    ViewData["Title"] = "Tạo câu hỏi";
+    ViewData["Title"] = "Create Question";
 }
 
-<h1>Tạo câu hỏi mới</h1>
+<h1>Create New Question</h1>
 
 @if (TempData["Success"] is string successMessage)
 {
@@ -23,7 +23,7 @@
             <div class="mb-3">
                 <label asp-for="Content" class="form-label"></label>
                 <textarea asp-for="Content" class="form-control" rows="5"
-                          placeholder="Nhập nội dung câu hỏi..."></textarea>
+                          placeholder="Enter the question content..."></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
 
@@ -39,9 +39,9 @@
                 <span asp-validation-for="BloomLevel" class="text-danger"></span>
             </div>
 
-            <button type="submit" name="nextAction" value="stay" class="btn btn-primary">Lưu &amp; tạo thêm</button>
-            <button type="submit" name="nextAction" value="list" class="btn btn-success">Lưu &amp; về danh sách</button>
-            <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+            <button type="submit" name="nextAction" value="stay" class="btn btn-primary">Save &amp; Add Another</button>
+            <button type="submit" name="nextAction" value="list" class="btn btn-success">Save &amp; Back to List</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
         </form>
     </div>
 </div>
