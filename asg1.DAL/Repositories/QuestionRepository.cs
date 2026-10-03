@@ -11,7 +11,7 @@ namespace asg1.DAL.Repositories
         {
         }
 
-        public async Task<IReadOnlyList<Question>> SearchAsync(int? subjectId, QuestionStatus? status, string? keyword)
+        public async Task<(IReadOnlyList<Question> Items, int TotalCount)> SearchAsync(int? subjectId, QuestionStatus? status, string? keyword, int pageIndex, int pageSize)
         {
             IQueryable<Question> query = _dbSet
                 .Include(q => q.Subject)
@@ -33,10 +33,15 @@ namespace asg1.DAL.Repositories
                 query = query.Where(q => q.Content.Contains(term));
             }
 
-            return await query
+            var totalCount = await query.CountAsync();
+            var items = await query
                 .OrderByDescending(q => q.CreatedAt)
                 .ThenByDescending(q => q.QuestionId)
+                .Skip((Math.Max(1, pageIndex) - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+                
+            return (items, totalCount);
         }
 
         public async Task<Question?> GetByIdWithDetailsAsync(int id) =>
