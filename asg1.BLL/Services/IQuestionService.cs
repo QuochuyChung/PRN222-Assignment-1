@@ -5,7 +5,7 @@ namespace asg1.BLL.Services
 {
     public interface IQuestionService
     {
-        Task<IReadOnlyList<QuestionDto>> SearchAsync(QuestionQuery query);
+        Task<(IReadOnlyList<QuestionDto> Items, int TotalCount)> SearchAsync(QuestionQuery query);
         Task<QuestionDto?> GetByIdAsync(int id);
         Task<IReadOnlyList<SubjectLookupDto>> GetSubjectOptionsAsync();
         Task<ServiceResult<QuestionDto>> CreateAsync(QuestionSaveDto dto);
