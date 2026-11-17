@@ -1,4 +1,4 @@
-using asg1.BLL.Common;
+using asg1.Common.Results;
 using asg1.Common.Dtos;
 
 namespace asg1.BLL.Services

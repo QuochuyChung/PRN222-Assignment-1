@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using asg1.BLL.Common;
+using asg1.Common.Results;
 using asg1.BLL.Services;
 using asg1.Common.Dtos;
 using asg1.Common.Enums;
@@ -41,6 +41,8 @@ namespace asg1.Controllers
                 Keyword = keyword,
                 SubjectId = subjectId,
                 Status = status,
+                CurrentPage = Math.Max(1, page),
+                TotalPages = (int)Math.Ceiling(result.TotalCount / (double)Math.Max(1, pageSize)),
                 SubjectOptions = await BuildSubjectOptionsAsync("All subjects", subjectId),
                 StatusOptions = BuildStatusOptions(status),
                 Items = result.Items.Select(q => new QuestionIndexViewModel.QuestionListItem

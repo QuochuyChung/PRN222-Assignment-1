@@ -1,4 +1,4 @@
-namespace asg1.BLL.Common
+namespace asg1.Common.Results
 {
     public static class ErrorKeys
     {

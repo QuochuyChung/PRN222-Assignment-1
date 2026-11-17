@@ -1,20 +1,12 @@
+using asg1.BLL;
 using asg1.BLL.AI;
-using asg1.BLL.Services;
-using asg1.DAL.Data;
-using asg1.DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAppDbContext(builder.Configuration);
-builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
-builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
-builder.Services.AddScoped<IRubricRepository, RubricRepository>();
-builder.Services.AddScoped<IQuestionService, QuestionService>();
-builder.Services.AddScoped<IAiQuestionService, AiQuestionService>();
-builder.Services.AddScoped<IRubricService, RubricService>();
+builder.Services.AddBusinessLayer(builder.Configuration);
 
 builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
 builder.Services.AddHttpClient<IAiQuestionGenerator, GeminiQuestionGenerator>(client =>
@@ -41,7 +33,7 @@ app.MapControllerRoute(
 
 try
 {
-    await DbSeeder.SeedAsync(app.Services);
+    await app.Services.SeedDataAsync();
 }
 catch (Exception ex)
 {

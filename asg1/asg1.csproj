@@ -10,13 +10,14 @@
   <ItemGroup>
     <ProjectReference Include="..\asg1.BLL\asg1.BLL.csproj" />
     <ProjectReference Include="..\asg1.Common\asg1.Common.csproj" />
-    <ProjectReference Include="..\asg1.DAL\asg1.DAL.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Presentation chỉ được thấy BLL và Common; không "nhìn xuyên" qua BLL để chạm DAL. -->
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
   </PropertyGroup>
 
 </Project>

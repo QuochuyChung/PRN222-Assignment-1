@@ -1,5 +1,5 @@
 using asg1.BLL.AI;
-using asg1.BLL.Common;
+using asg1.Common.Results;
 using asg1.Common.Dtos;
 using asg1.DAL.Entities;
 using asg1.Common.Enums;
